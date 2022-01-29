@@ -139,9 +139,11 @@ function getScore () {
 
 //B Done.
 function createOrUpdateScore (value) {
+  console.log(typeof value);
   // console.log(JSON.stringify(value));
-  // value = value.toString();
-  value = JSON.stringify(value);
+   value = value.toString();
+  // console.log(typeof value1);
+  // value = JSON.stringify(value);
 
   console.log(typeof(value));
 
@@ -161,3 +163,33 @@ function updateScoreElement(){
 function updateAttempts(){
   attemptsElement.textContent = maxAttempts - attempts;
 }
+
+
+
+
+
+
+// function deleteScore () {
+//   localStorage.removeItem('score');
+//   return null;
+// }
+
+// function clearAllData () {
+//   localStorage.clear();
+//   return null;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
