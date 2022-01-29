@@ -1,4 +1,5 @@
 'use strict';
+console.log('app js connected.');
 // TODO hey, what about an array of tree objects! that would have file path for picture, and the tree info
 // TODO don't repeat the correct picture
 // TODO randomize tree image placement
@@ -16,4 +17,147 @@
 // update it - setItem in localStorage
 // delete it
 
+//set up  app variables
+const pizzaNames = ['Brick-Oven-Pizza', 'Calzone-Pizza', 'Chicago-Pizza', 'Oven-Ginder-Pizza', 'Detroit-Pizza', 'Deluxe-Pizza-Thin-Crust', 'New-York-Pizza', 'Shotgun-Dans-MeatLover'];
+let correctPizza = '';
+let wrongPizza = '';
+let attempts = 0;
+const maxAttempts = 10;
 
+//get Dom elements from html
+const pizzaNameElement = document.getElementById('pizzaName');
+const pizzaImagesParent = document.getElementById('pizzaImages');
+const responseElement = document.getElementById('response');
+const scoreElement = document.getElementById('score');
+const attemptsElement = document.getElementById('attempts');
+console.log({pizzaNameElement,pizzaImagesParent,responseElement,scoreElement,attemptsElement});
+
+
+
+
+
+function setup () {
+  // call this with a random name
+  // 1.
+  correctPizza = generateRandomPizza();
+  // 2.
+  wrongPizza = generateRandomPizza();
+  // 3.
+  updatePizzaName(correctPizza);
+
+  if (attempts) {
+    pizzaImagesParent.removeChild(pizzaImagesParent.lastChild);
+    pizzaImagesParent.removeChild(pizzaImagesParent.lastChild);
+  }
+
+
+  // 4.
+  renderPizzaImage(correctPizza);
+  // 5.
+  renderPizzaImage(wrongPizza);
+  // 6.
+  updateScoreElement();
+  // 7.
+  updateAttempts();
+}
+
+setup();
+
+
+
+// One Done. Two Done.
+function generateRandomPizza () {
+  const index = Math.floor(Math.random() * pizzaNames.length);
+  return pizzaNames[index];
+}
+//Three Done
+function updatePizzaName(pizzaName) {
+  pizzaNameElement.textContent = pizzaName;
+}
+//Four Done. Five Done.
+function renderPizzaImage(pizzaName) {
+  const img = document.createElement('img');
+  img.setAttribute('src', 'images/' + pizzaName + '.jpg');
+  img.setAttribute('id', pizzaName);
+  pizzaImagesParent.append(img);
+}
+//from the event listener render out response
+function renderResponse(response) {
+  responseElement.textContent = response;
+}
+
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------
+
+pizzaImagesParent.addEventListener('click', function (event) {
+  if (attempts === maxAttempts) {
+    return;
+  }
+
+  const answer = event.target.getAttribute('id');
+  console.log('answer', answer);
+
+  if (answer === correctPizza) {
+    incrementScore();
+    renderResponse('woohoo! ZA,ZA,ZA,ZA,ZA!');
+  } else {
+    renderResponse('wrong! Za Alert.');
+  }
+  attempts++;
+  setup();
+  
+  if (attempts === maxAttempts) {
+    // do things
+    // draw();
+    // chart();
+  }
+});
+
+
+function incrementScore () {
+  //get score from local storage.
+  //A.
+  let score = getScore();
+  //update score
+  score++;
+  //Here we need to set up local storage. 
+  //B.
+  createOrUpdateScore(score);
+  //C.
+  updateScoreElement();
+}
+//A. Done
+function getScore () {
+  let score = localStorage.getItem('score');
+  console.log('score from LOCSTOR', score);
+  if (score !== null) {
+    score = parseInt(score);
+  }
+  return score;
+}
+
+//B Done.
+function createOrUpdateScore (value) {
+  // console.log(JSON.stringify(value));
+  // value = value.toString();
+  value = JSON.stringify(value);
+
+  console.log(typeof(value));
+
+  localStorage.setItem('score', value);
+
+  const score = localStorage.getItem('score');
+  console.log('score from local storage after being set: ', score);
+
+  return score;
+}
+
+//C Done.
+function updateScoreElement(){
+  scoreElement.textContent = getScore() || 0;
+}
+
+function updateAttempts(){
+  attemptsElement.textContent = maxAttempts - attempts;
+}
